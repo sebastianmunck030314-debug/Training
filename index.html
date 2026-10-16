@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mammans Träningspass</title>
+    <style>
+        body { font-family: sans-serif; background-color: #121212; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .container { text-align: center; max-width: 600px; padding: 20px; background: #1e1e1e; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        h1 { font-size: 2.5rem; margin-bottom: 10px; color: #4caf50; }
+        #timer { font-size: 5rem; font-weight: bold; margin: 20px 0; font-variant-numeric: tabular-nums; }
+        #description { font-size: 1.2rem; color: #aaaaaa; min-height: 60px; margin-bottom: 20px; }
+        #up-next { font-size: 1rem; color: #ff9800; margin-bottom: 30px; font-weight: bold; }
+        button { font-size: 1.2rem; padding: 15px 30px; margin: 5px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #start-btn { background-color: #4caf50; color: white; }
+        #next-btn { background-color: #2196f3; color: white; }
+        button:active { opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 id="exercise-name">Gör dig redo!</h1>
+    <div id="description">Tryck på start när du är redo att börja passet.</div>
+    <div id="timer">00:00</div>
+    <div id="up-next">Nästa: Planka</div>
+    
+    <div>
+        <button id="start-btn" onclick="toggleTimer()">Start</button>
+        <button id="next-btn" onclick="nextStep()">Nästa Steg ➔</button>
+    </div>
+</div>
+
+<script>
+    // Din "Backend" - Här redigerar du hela passet enkelt
+    const workoutPlan = [
+        { name: "Planka (Set 1)", duration: 120, desc: "Ligg på underarmar och tår. Håll kroppen rak." },
+        { name: "Vila", duration: 60, desc: "Andas och gör dig redo för nästa set." },
+        { name: "Planka (Set 2)", duration: 120, desc: "Ligg på underarmar och tår." },
+        { name: "Vila", duration: 60, desc: "Andas och gör dig redo för nästa set." },
+        { name: "Planka (Set 3)", duration: 120, desc: "Sista plankan! Gå ner på knä om ländryggen svankar." },
+        { name: "Vila & Förflyttning", duration: 60, desc: "Gör dig redo för isometriska tåhävningar." },
+        { name: "Isometrisk Tåhävning (Höger)", duration: 45, desc: "Stå på höger ben, tryck upp på tå och frys." },
+        { name: "Isometrisk Tåhävning (Vänster)", duration: 45, desc: "Stå på vänster ben, tryck upp på tå och frys." },
+        { name: "Tib raises", duration: 60, desc: "Luta ryggen mot väggen, dra upp tårna 15-20 gånger." }
+        // Fortsätt lägga in resten av tabellen här enligt samma mönster...
+    ];
+
+    let currentStep = 0;
+    let timeLeft = 0;
+    let timerInterval = null;
+    let isRunning = false;
+
+    const nameEl = document.getElementById("exercise-name");
+    const descEl = document.getElementById("description");
+    const timerEl = document.getElementById("timer");
+    const nextEl = document.getElementById("up-next");
+    const startBtn = document.getElementById("start-btn");
+
+    function updateUI() {
+        if (currentStep >= workoutPlan.length) {
+            nameEl.textContent = "Passet är klart!";
+            descEl.textContent = "Bra jobbat!";
+            timerEl.textContent = "00:00";
+            nextEl.textContent = "";
+            return;
+        }
+
+        const step = workoutPlan[currentStep];
+        nameEl.textContent = step.name;
+        descEl.textContent = step.desc;
+        
+        // Uppdatera "Nästa"-texten
+        if (currentStep + 1 < workoutPlan.length) {
+            nextEl.textContent = "Nästa: " + workoutPlan[currentStep + 1].name;
+        } else {
+            nextEl.textContent = "Nästa: Passet är slut";
+        }
+
+        if (!isRunning) {
+            timeLeft = step.duration;
+            formatTime(timeLeft);
+        }
+    }
+
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        timerEl.textContent = `${m}:${s}`;
+    }
+
+    function toggleTimer() {
+        if (currentStep >= workoutPlan.length) return;
+
+        if (isRunning) {
+            clearInterval(timerInterval);
+            startBtn.textContent = "Start";
+            startBtn.style.backgroundColor = "#4caf50";
+        } else {
+            if (timeLeft === 0) timeLeft = workoutPlan[currentStep].duration;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                formatTime(timeLeft);
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    startBtn.textContent = "Start";
+                    nextStep(); // Går automatiskt till nästa när tiden är slut
+                }
+            }, 1000);
+            startBtn.textContent = "Paus";
+            startBtn.style.backgroundColor = "#f44336";
+        }
+        isRunning = !isRunning;
+    }
+
+    function nextStep() {
+        clearInterval(timerInterval);
+        isRunning = false;
+        startBtn.textContent = "Start";
+        startBtn.style.backgroundColor = "#4caf50";
+        currentStep++;
+        updateUI();
+    }
+
+    // Initiera första vyn
+    updateUI();
+</script>
+
+</body>
+</html>
