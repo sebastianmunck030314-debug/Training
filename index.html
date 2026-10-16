@@ -4,22 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mammans Träningspass</title>
+    <!-- Laddar in konfetti-verktyget -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        body { font-family: sans-serif; background-color: #121212; color: #ffffff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .container { text-align: center; max-width: 600px; padding: 20px; background: #1e1e1e; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        body { 
+            font-family: sans-serif; 
+            background-color: #121212; 
+            color: #ffffff; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            height: 100vh; 
+            margin: 0; 
+            transition: background-color 1.5s ease; /* Mjuk övergång för bakgrundsfärg */
+        }
+        .container { 
+            text-align: center; 
+            max-width: 600px; 
+            width: 90%;
+            padding: 20px; 
+            background: rgba(30, 30, 30, 0.85); 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5); 
+        }
+        /* Framstegsmätaren */
+        #progress-container {
+            width: 100%;
+            height: 12px;
+            background-color: #333;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #4caf50;
+            transition: width 0.5s ease-out;
+        }
         h1 { font-size: 2.5rem; margin-bottom: 10px; color: #4caf50; }
         #timer { font-size: 5rem; font-weight: bold; margin: 20px 0; font-variant-numeric: tabular-nums; }
-        #description { font-size: 1.2rem; color: #aaaaaa; min-height: 60px; margin-bottom: 20px; }
-        #up-next { font-size: 1rem; color: #ff9800; margin-bottom: 30px; font-weight: bold; }
+        #description { font-size: 1.2rem; color: #dddddd; min-height: 60px; margin-bottom: 20px; }
+        #up-next { font-size: 1.1rem; color: #ff9800; margin-bottom: 30px; font-weight: bold; }
         button { font-size: 1.2rem; padding: 15px 30px; margin: 5px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #start-btn { background-color: #4caf50; color: white; }
+        #start-btn { background-color: #4caf50; color: white; width: 150px; }
         #next-btn { background-color: #2196f3; color: white; }
-        button:active { opacity: 0.8; }
+        button:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
 
 <div class="container">
+    <div id="progress-container"><div id="progress-bar"></div></div>
     <h1 id="exercise-name">Gör dig redo!</h1>
     <div id="description">Tryck på start när du är redo att börja passet.</div>
     <div id="timer">00:00</div>
@@ -27,23 +64,140 @@
     
     <div>
         <button id="start-btn" onclick="toggleTimer()">Start</button>
-        <button id="next-btn" onclick="nextStep()">Nästa Steg ➔</button>
+        <button id="next-btn" onclick="nextStep()">Nästa ➔</button>
     </div>
 </div>
 
 <script>
-    // Din "Backend" - Här redigerar du hela passet enkelt
     const workoutPlan = [
+        // ---------------------------------------------------------
+        // 1. UPPVÄRMNING - PLANKA
+        // ---------------------------------------------------------
         { name: "Planka (Set 1)", duration: 120, desc: "Ligg på underarmar och tår. Håll kroppen rak." },
-        { name: "Vila", duration: 60, desc: "Andas och gör dig redo för nästa set." },
-        { name: "Planka (Set 2)", duration: 120, desc: "Ligg på underarmar och tår." },
-        { name: "Vila", duration: 60, desc: "Andas och gör dig redo för nästa set." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Andas och gör dig redo för nästa set." },
+        { name: "Planka (Set 2)", duration: 120, desc: "Ligg på underarmar och tår. Spänn magen!" },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Andas och gör dig redo för sista plankan." },
         { name: "Planka (Set 3)", duration: 120, desc: "Sista plankan! Gå ner på knä om ländryggen svankar." },
-        { name: "Vila & Förflyttning", duration: 60, desc: "Gör dig redo för isometriska tåhävningar." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Gör dig redo för isometriska tåhävningar." },
+
+        // ---------------------------------------------------------
+        // 2. ISOMETRISK TÅHÄVNING & TIB RAISES (3 SET)
+        // ---------------------------------------------------------
+        // Set 1
         { name: "Isometrisk Tåhävning (Höger)", duration: 45, desc: "Stå på höger ben, tryck upp på tå och frys." },
         { name: "Isometrisk Tåhävning (Vänster)", duration: 45, desc: "Stå på vänster ben, tryck upp på tå och frys." },
-        { name: "Tib raises", duration: 60, desc: "Luta ryggen mot väggen, dra upp tårna 15-20 gånger." }
-        // Fortsätt lägga in resten av tabellen här enligt samma mönster...
+        { name: "Tib raises", duration: 60, desc: "Luta ryggen mot väggen, dra upp tårna 15-20 gånger." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Vila benen innan nästa set." },
+        // Set 2
+        { name: "Isometrisk Tåhävning (Höger)", duration: 45, desc: "Set 2! Stå på höger ben, tryck upp på tå och frys." },
+        { name: "Isometrisk Tåhävning (Vänster)", duration: 45, desc: "Set 2! Stå på vänster ben, tryck upp." },
+        { name: "Tib raises", duration: 60, desc: "Set 2! Luta ryggen mot väggen, dra upp tårna." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Vila benen innan sista setet." },
+        // Set 3
+        { name: "Isometrisk Tåhävning (Höger)", duration: 45, desc: "Sista setet! Stå på höger ben." },
+        { name: "Isometrisk Tåhävning (Vänster)", duration: 45, desc: "Sista setet! Stå på vänster ben." },
+        { name: "Tib raises", duration: 60, desc: "Sista Tib raises. Känn brännan i smalbenen!" },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Hämta andan. Dags för Jägarvila!" },
+
+        // ---------------------------------------------------------
+        // 3. JÄGARVILA (5 SET)
+        // ---------------------------------------------------------
+        { name: "Jägarvila (Set 1)", duration: 60, desc: "Glid ner mot väggen, ca 90 grader i knäna." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Skaka loss benen." },
+        { name: "Jägarvila (Set 2)", duration: 60, desc: "Håll positionen, tryck ländryggen mot väggen." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Skaka loss benen." },
+        { name: "Jägarvila (Set 3)", duration: 60, desc: "Halvvägs! Håll i." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Andas djupt." },
+        { name: "Jägarvila (Set 4)", duration: 60, desc: "Biter det i låren? Bra!" },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Sista vilan!" },
+        { name: "Jägarvila (Set 5)", duration: 60, desc: "Sista setet! Håll starkt hela vägen." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Vila och gå till trappan." },
+
+        // ---------------------------------------------------------
+        // 4. TRAPPGÅNG
+        // ---------------------------------------------------------
+        { name: "Trappgång (Excentrisk)", duration: 180, desc: "Gå upp (skippa ett steg). Gå ner extremt långsamt." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Bra jobbat! Ta dig till ryggresningen." },
+
+        // ---------------------------------------------------------
+        // 5. ISOMETRISK RYGGRESNING (3 SET)
+        // ---------------------------------------------------------
+        { name: "Isometrisk Rygg (Set 1)", duration: 60, desc: "Håll kroppen horisontell och spänn." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Vila ländryggen." },
+        { name: "Isometrisk Rygg (Set 2)", duration: 60, desc: "Upp igen, rak linje och frys positionen." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Vila ländryggen." },
+        { name: "Isometrisk Rygg (Set 3)", duration: 60, desc: "Sista statiska setet." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Gör dig redo för knäböj (squats)." },
+
+        // ---------------------------------------------------------
+        // 6. KNÄBÖJ / SQUATS (3 SET) - FLYTTAD HIT
+        // ---------------------------------------------------------
+        { name: "Knäböj (Set 1)", duration: 60, desc: "10 reps. Gå ner långsamt (3-4 sek)." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Skaka loss benen." },
+        { name: "Knäböj (Set 2)", duration: 60, desc: "10 reps. Bromsa rörelsen nedåt." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Skaka loss benen." },
+        { name: "Knäböj (Set 3)", duration: 60, desc: "10 reps. Sista knäböj!" },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Vila inför dynamiska ryggresningar." },
+
+        // ---------------------------------------------------------
+        // 7. DYNAMISK RYGGRESNING (3 SET)
+        // ---------------------------------------------------------
+        { name: "Dynamisk Rygg (Set 1)", duration: 60, desc: "10 reps. Sänk kontrollerat, dra upp." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Hämta andan." },
+        { name: "Dynamisk Rygg (Set 2)", duration: 60, desc: "10 reps till." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Hämta andan." },
+        { name: "Dynamisk Rygg (Set 3)", duration: 60, desc: "Sista 10 repetitionerna!" },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Gör dig redo för utfall." },
+
+        // ---------------------------------------------------------
+        // 8. UTFALL BAKÅT
+        // ---------------------------------------------------------
+        { name: "Utfall bakåt", duration: 90, desc: "10 reps/ben. Kliv bakåt och sjunk ner kontrollerat." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Lägg dig på golvet. Hämta boll och band." },
+
+        // ---------------------------------------------------------
+        // 9. GLUTE BRIDGE (BOLL & BAND)
+        // ---------------------------------------------------------
+        { name: "Glute Bridge + Boll", duration: 60, desc: "10-15 reps. Kläm bollen mellan knäna." },
+        { name: "Byt till band (Vila)", duration: 45, desc: "Sätt bandet runt knäna." },
+        { name: "Glute Bridge + Band", duration: 60, desc: "10-15 reps. Pressa knäna isär." },
+        { name: "Byt till boll (Vila)", duration: 45, desc: "Ta bollen igen." },
+        { name: "Glute Bridge + Boll", duration: 60, desc: "10-15 reps. Kläm hårt!" },
+        { name: "Byt till band (Vila)", duration: 45, desc: "På med bandet." },
+        { name: "Glute Bridge + Band", duration: 60, desc: "10-15 reps." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Ta av bandet. Redo för sidoplanka." },
+
+        // ---------------------------------------------------------
+        // 10. SIDOPLANKA (2 SET PER SIDA)
+        // ---------------------------------------------------------
+        { name: "Sidoplanka (Höger)", duration: 60, desc: "Ligg på höger sida. Håll höften uppe." },
+        { name: "Byt sida", duration: 15, desc: "Rulla till vänster." },
+        { name: "Sidoplanka (Vänster)", duration: 60, desc: "Stöd på vänster underarm." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Vila kort." },
+        { name: "Sidoplanka (Höger)", duration: 60, desc: "Sista högersidan!" },
+        { name: "Byt sida", duration: 15, desc: "Rulla till vänster." },
+        { name: "Sidoplanka (Vänster)", duration: 60, desc: "Sista bålövningen!" },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Gå till ryggresningen för Y-raises." },
+
+        // ---------------------------------------------------------
+        // 11. Y-RAISES (2 SET)
+        // ---------------------------------------------------------
+        { name: "Y-raises (Set 1)", duration: 60, desc: "10 reps utan vikt. Raka armar i ett 'Y'." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Kort vila." },
+        { name: "Y-raises (Set 2)", duration: 60, desc: "10 reps till." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Hämta 3 kg hantlar." },
+
+        // ---------------------------------------------------------
+        // 12. ÖVERKROPPS-SUPERSET (2 SET)
+        // ---------------------------------------------------------
+        { name: "Superset (Set 1)", duration: 120, desc: "10 axelpress, 10 lateral raises, 10 bicepscurls." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Vila ordentligt innan sista setet." },
+        { name: "Superset (Set 2)", duration: 120, desc: "Sista ansträngningen! Du klarar det." },
+        
+        // ---------------------------------------------------------
+        // KLART!
+        // ---------------------------------------------------------
+        { name: "Passet är klart!", duration: 10, desc: "Otroligt bra jobbat. Dags för dusch!" }
     ];
 
     let currentStep = 0;
@@ -51,13 +205,76 @@
     let timerInterval = null;
     let isRunning = false;
 
+    // Bakgrundsfärger som skiftar (mörka, lugna färger så texten syns)
+    const backgroundColors = ["#121212", "#1a2a3a", "#2c1c38", "#1c3829", "#38231c", "#1e1e1e"];
+
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    
     const nameEl = document.getElementById("exercise-name");
     const descEl = document.getElementById("description");
     const timerEl = document.getElementById("timer");
     const nextEl = document.getElementById("up-next");
     const startBtn = document.getElementById("start-btn");
+    const progressBar = document.getElementById("progress-bar");
+
+    // Ljud 1: Varning 3 sekunder kvar
+    function playWarningPling() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine'; 
+        osc.frequency.setValueAtTime(700, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+    }
+
+    // Ljud 2: Dopamin-belöning (melodiskt uppåtgående) när övningen är klar
+    function playSuccessSound() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = freq;
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now + i * 0.1);
+            gain.gain.setValueAtTime(0.3, now + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
+            osc.stop(now + i * 0.1 + 0.4);
+        });
+    }
+
+    function fireConfetti(isEnd = false) {
+        if (isEnd) {
+            // Stort regn på slutet
+            let duration = 5 * 1000;
+            let end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        } else {
+            // Liten pepp-popp vid övningsbyte
+            confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
+        }
+    }
+
+    function updateBackground() {
+        const randomColor = backgroundColors[Math.floor(Math.random() * backgroundColors.length)];
+        document.body.style.backgroundColor = randomColor;
+    }
 
     function updateUI() {
+        // Uppdatera progressbaren
+        let progressPercent = ((currentStep) / workoutPlan.length) * 100;
+        if (progressPercent > 100) progressPercent = 100;
+        progressBar.style.width = progressPercent + "%";
+
         if (currentStep >= workoutPlan.length) {
             nameEl.textContent = "Passet är klart!";
             descEl.textContent = "Bra jobbat!";
@@ -70,7 +287,6 @@
         nameEl.textContent = step.name;
         descEl.textContent = step.desc;
         
-        // Uppdatera "Nästa"-texten
         if (currentStep + 1 < workoutPlan.length) {
             nextEl.textContent = "Nästa: " + workoutPlan[currentStep + 1].name;
         } else {
@@ -79,8 +295,8 @@
 
         if (!isRunning) {
             timeLeft = step.duration;
-            formatTime(timeLeft);
         }
+        formatTime(timeLeft);
     }
 
     function formatTime(seconds) {
@@ -91,21 +307,36 @@
 
     function toggleTimer() {
         if (currentStep >= workoutPlan.length) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
 
         if (isRunning) {
             clearInterval(timerInterval);
             startBtn.textContent = "Start";
             startBtn.style.backgroundColor = "#4caf50";
         } else {
-            if (timeLeft === 0) timeLeft = workoutPlan[currentStep].duration;
+            if (timeLeft <= 0) timeLeft = workoutPlan[currentStep].duration;
             timerInterval = setInterval(() => {
                 timeLeft--;
                 formatTime(timeLeft);
+                
+                if (timeLeft === 3) playWarningPling(); // 3 sek kvar
+                
                 if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    isRunning = false;
-                    startBtn.textContent = "Start";
-                    nextStep(); // Går automatiskt till nästa när tiden är slut
+                    currentStep++;
+                    playSuccessSound();   // Spela belöningsljud!
+                    updateBackground();   // Byt bakgrundsfärg!
+                    
+                    if (currentStep >= workoutPlan.length) {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        startBtn.textContent = "Start";
+                        updateUI();
+                        fireConfetti(true); // Final-konfetti!
+                    } else {
+                        timeLeft = workoutPlan[currentStep].duration;
+                        updateUI(); 
+                        fireConfetti(false); // Liten konfetti mellan set
+                    }
                 }
             }, 1000);
             startBtn.textContent = "Paus";
@@ -120,12 +351,12 @@
         startBtn.textContent = "Start";
         startBtn.style.backgroundColor = "#4caf50";
         currentStep++;
+        updateBackground();
         updateUI();
     }
 
     // Initiera första vyn
     updateUI();
 </script>
-
 </body>
 </html>
