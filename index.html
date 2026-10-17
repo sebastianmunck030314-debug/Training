@@ -228,6 +228,24 @@
     const startBtn = document.getElementById("start-btn");
     const progressBar = document.getElementById("progress-bar");
 
+    function initAudio() {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioCtx = new AudioContext();
+            
+            // "Lås upp" ljudmotorn genom att spela en ohörbar ton i 0.1 sekunder direkt vid klicket
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            gain.gain.value = 0; // 0 = helt tyst
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(0);
+            osc.stop(0.1);
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+    }
     // Ljud 1: Varning 3 sekunder kvar
     function playWarningPling() {
         if (audioCtx.state === 'suspended') audioCtx.resume();
