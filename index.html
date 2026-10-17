@@ -70,14 +70,15 @@
 
 <script>
     const workoutPlan = [
+        { name: "Träningspass 1", duration: 0, desc: "Du behvöer en ryggextensionmaskin, en trappa, en vägg, hantlar, gummiband och medicinboll" },
         // ---------------------------------------------------------
         // 1. UPPVÄRMNING - PLANKA
         // ---------------------------------------------------------
-        { name: "Planka (Set 1)", duration: 120, desc: "Ligg på underarmar och tår. Håll kroppen rak." },
+        { name: "Planka (Set 1)", duration: 90, desc: "Ligg på underarmar och tår. Håll kroppen rak." },
         { name: "Vila (Mellan set)", duration: 45, desc: "Andas och gör dig redo för nästa set." },
-        { name: "Planka (Set 2)", duration: 120, desc: "Ligg på underarmar och tår. Spänn magen!" },
+        { name: "Planka (Set 2)", duration: 90, desc: "Ligg på underarmar och tår. Spänn magen!" },
         { name: "Vila (Mellan set)", duration: 45, desc: "Andas och gör dig redo för sista plankan." },
-        { name: "Planka (Set 3)", duration: 120, desc: "Sista plankan! Gå ner på knä om ländryggen svankar." },
+        { name: "Planka (Set 3)", duration: 90, desc: "Sista plankan! Gå ner på knä om ländryggen svankar." },
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Gör dig redo för isometriska tåhävningar." },
 
         // ---------------------------------------------------------
@@ -114,19 +115,25 @@
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Vila och gå till trappan." },
 
         // ---------------------------------------------------------
-        // 4. TRAPPGÅNG
+        // 4. TRAPPGÅNG + tåhävningar
         // ---------------------------------------------------------
-        { name: "Trappgång (Excentrisk)", duration: 180, desc: "Gå upp (skippa ett steg). Gå ner extremt långsamt." },
+        { name: "Trappgång (Excentrisk)", duration: 120, desc: "Gå upp (skippa ett steg). Gå ner extremt långsamt." },
+        { name: "Vila (Mellan set)", duration: 30, desc: "Andas djupt." },
+        
+        { name: "Tåhävningar ", duration: 45, desc: "Stå på trappkanten, gå på tå så högt du kan sedan ner så djupt du kan, men långsamt och kontrollerat." },
+        { name: "Vila (Mellan set)", duration: 30, desc: "Andas djupt." },
+        
+        { name: "Trappgång (Excentrisk)", duration: 120, desc: "Gå upp (skippa ett steg). Gå ner extremt långsamt." },
+        { name: "Vila (Mellan set)", duration: 30, desc: "Andas djupt." },
+        
+        { name: "Tåhävningar ", duration: 45, desc: "Stå på trappkanten, gå på tå så högt du kan sedan ner så djupt du kan, men långsamt och kontrollerat." },
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Bra jobbat! Ta dig till ryggresningen." },
 
+
+    // ---------------------------------------------------------
+        // 5. ISOMETRISK RYGGRESNING (1 SET)
         // ---------------------------------------------------------
-        // 5. ISOMETRISK RYGGRESNING (3 SET)
-        // ---------------------------------------------------------
-        { name: "Isometrisk Rygg (Set 1)", duration: 60, desc: "Håll kroppen horisontell och spänn." },
-        { name: "Vila (Mellan set)", duration: 45, desc: "Vila ländryggen." },
-        { name: "Isometrisk Rygg (Set 2)", duration: 60, desc: "Upp igen, rak linje och frys positionen." },
-        { name: "Vila (Mellan set)", duration: 45, desc: "Vila ländryggen." },
-        { name: "Isometrisk Rygg (Set 3)", duration: 60, desc: "Sista statiska setet." },
+        { name: "Isometrisk Rygg", duration: 60, desc: "Håll kroppen horisontell och spänn." },
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Gör dig redo för knäböj (squats)." },
 
         // ---------------------------------------------------------
@@ -150,21 +157,21 @@
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Gör dig redo för utfall." },
 
         // ---------------------------------------------------------
-        // 8. UTFALL BAKÅT
+        // 9. GLUTE BRIDGE (BOLL & BAND) + Baksidalår glidningar
         // ---------------------------------------------------------
-        { name: "Utfall bakåt", duration: 90, desc: "10 reps/ben. Kliv bakåt och sjunk ner kontrollerat." },
-        { name: "Vila (Mellan övningar)", duration: 60, desc: "Lägg dig på golvet. Hämta boll och band." },
-
-        // ---------------------------------------------------------
-        // 9. GLUTE BRIDGE (BOLL & BAND)
-        // ---------------------------------------------------------
+        { name: "Baksidalår glidningar", duration: 60, desc: "Behöver strumpor på halt golv, sätt fötterna vid rumpan liggandes på rygg, gå upp med rumpan i glutebridge och glid långsamt med fötterna ifrån kroppen." },
+        { name: "Byt till glutebridge med boll (Vila)", duration: 30, desc: "Ta bollen." },
+        
         { name: "Glute Bridge + Boll", duration: 60, desc: "10-15 reps. Kläm bollen mellan knäna." },
-        { name: "Byt till band (Vila)", duration: 45, desc: "Sätt bandet runt knäna." },
+        { name: "Byt till band (Vila)", duration: 30, desc: "Sätt bandet runt knäna." },
         { name: "Glute Bridge + Band", duration: 60, desc: "10-15 reps. Pressa knäna isär." },
-        { name: "Byt till boll (Vila)", duration: 45, desc: "Ta bollen igen." },
+        { name: "Byt till boll (Vila)", duration: 30, desc: "Ta bollen igen." },
         { name: "Glute Bridge + Boll", duration: 60, desc: "10-15 reps. Kläm hårt!" },
-        { name: "Byt till band (Vila)", duration: 45, desc: "På med bandet." },
+        { name: "Byt till band (Vila)", duration: 30, desc: "På med bandet." },
         { name: "Glute Bridge + Band", duration: 60, desc: "10-15 reps." },
+        { name: "Byt till baksidalår glidningar (Vila)", duration: 30, desc: "Fötterna med strumpor på golvet." },
+        
+        { name: "Baksidalår glidningar", duration: 60, desc:,
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Ta av bandet. Redo för sidoplanka." },
 
         // ---------------------------------------------------------
@@ -180,11 +187,16 @@
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Gå till ryggresningen för Y-raises." },
 
         // ---------------------------------------------------------
-        // 11. Y-RAISES (2 SET)
+        // 11. Y-RAISES (2 SET) + ryggrodd
         // ---------------------------------------------------------
         { name: "Y-raises (Set 1)", duration: 60, desc: "10 reps utan vikt. Raka armar i ett 'Y'." },
         { name: "Vila (Mellan set)", duration: 45, desc: "Kort vila." },
         { name: "Y-raises (Set 2)", duration: 60, desc: "10 reps till." },
+        { name: "Vila (Mellan övningar)", duration: 60, desc: "Sätt dig på golvet och ta med ett långt gummiband",
+        
+        { name: "Sittandes rodd (Set 1)", duration: 60, desc: "Spänn bålen, tryck ihop skulder bladen, håll armbågarna tätt intill kroppen och dra bakåt." },
+        { name: "Vila (Mellan set)", duration: 45, desc: "Kort vila." },
+        { name: "Sittandes rodd (Set 1)", duration: 60, desc: "Spänn bålen, tryck ihop skulder bladen, håll armbågarna tätt intill kroppen och dra bakåt." },
         { name: "Vila (Mellan övningar)", duration: 60, desc: "Hämta 3 kg hantlar." },
 
         // ---------------------------------------------------------
