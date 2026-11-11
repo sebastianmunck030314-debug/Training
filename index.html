@@ -348,24 +348,53 @@
         }
     }
 
-    function speakExercise(text) {
-        if ('speechSynthesis' in window) {
-            try {
-                window.speechSynthesis.cancel();
-                if (window.speechSynthesis.paused) {
-                    window.speechSynthesis.resume();
-                }
-                const cleanText = text.replace(/\(.*?\)/g, '').trim(); 
-                const utterance = new SpeechSynthesisUtterance(cleanText);
-                utterance.lang = 'sv-SE';
-                utterance.rate = 1.0;
-                utterance.pitch = 1.0;
-                window.speechSynthesis.speak(utterance);
-            } catch (e) {
-                console.log("Speech synthesis error:", e);
+function speakExercise(text) {
+    if (isMuted) return;
+    
+    if ('speechSynthesis' in window) {
+        try {
+            window.speechSynthesis.cancel();
+            if (window.speechSynthesis.paused) {
+                window.speechSynthesis.resume();
             }
+            
+            const cleanText = text.replace(/\(.*?\)/g, '').trim(); 
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            
+            utterance.lang = 'sv-SE';
+            utterance.rate = 0.95; // Drar ner hastigheten marginellt för att låta mer avslappnad och mänsklig
+            utterance.pitch = 1.0;
+
+            // Hämta alla tillgängliga röster på enheten
+            const voices = window.speechSynthesis.getVoices();
+            
+            // Leta efter svenska röster
+            const swedishVoices = voices.filter(v => v.lang === 'sv-SE' || v.lang === 'sv_SE');
+            
+            if (swedishVoices.length > 0) {
+                // Försök hitta premium- eller förbättrade röster (Låter ofta mer mänskliga)
+                const premiumVoice = swedishVoices.find(v => v.name.includes('Premium') || v.name.includes('Enhanced') || v.name.includes('Google'));
+                
+                if (premiumVoice) {
+                    utterance.voice = premiumVoice;
+                } else {
+                    utterance.voice = swedishVoices[0]; // Välj den första bästa svenska rösten
+                }
+            }
+
+            window.speechSynthesis.speak(utterance);
+        } catch (e) {
+            console.log("Speech synthesis error:", e);
         }
     }
+}
+
+// Ladda rösterna i bakgrunden direkt när appen startar (viktigt för att de ska finnas tillgängliga vid första klicket)
+if ('speechSynthesis' in window) {
+    window.speechSynthesis.onvoiceschanged = function() {
+        window.speechSynthesis.getVoices();
+    };
+}
 
     function selectWorkout(type) {
         initAudio();
