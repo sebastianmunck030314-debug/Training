@@ -19,7 +19,7 @@
             margin: 0; 
             padding: 20px 0;
             box-sizing: border-box;
-            transition: background-color 1.5s ease; /* Mjuk övergång för bakgrundsfärg */
+            transition: background-color 1.5s ease;
         }
         .container { 
             text-align: center; 
@@ -84,8 +84,9 @@
             gap: 10px;
         }
         button { font-size: 1.1rem; padding: 14px 24px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        #start-btn { background-color: #4caf50; color: white; min-width: 120px; }
+        #start-btn { background-color: #4caf50; color: white; min-width: 100px; }
         #next-btn { background-color: #2196f3; color: white; }
+        #mute-btn { background-color: #9c27b0; color: white; }
         #change-workout-btn, #history-btn { background-color: #555; color: white; font-size: 0.95rem; padding: 12px 18px; margin-top: 15px; }
         button:active { transform: scale(0.95); }
 
@@ -152,8 +153,8 @@
             <div style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">Ca 47 minuter</div>
         </button>
         <button class="workout-option-btn" onclick="selectWorkout('short')" style="border-color: #ff9800;">
-            ⚡ Kort träningspass
-            <div style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">Ett snabbare alternativ</div>
+            ⚡ Kort Återhämtningspass
+            <div style="font-size: 0.9rem; color: #aaa; margin-top: 5px;">Ca 12 minuter (Ingen svett / inget ombyte)</div>
         </button>
         
         <div>
@@ -172,15 +173,16 @@
         <div class="btn-group" id="controls-group">
             <button id="start-btn" onclick="toggleTimer()">Start</button>
             <button id="next-btn" onclick="nextStep()">Nästa ➔</button>
+            <button id="mute-btn" onclick="toggleMute()">🔊 Röst På</button>
         </div>
 
         <!-- LOGGNINGSRUTA NÄR PASSET ÄR KLART -->
         <div id="log-summary">
             <h3>📝 Spara träningspass</h3>
             <div id="log-date"></div>
-            <label style="font-size: 0.9rem; color: #ccc; display: block; margin-bottom: 5px;">Kommentar (känsla, reps, vikter):</label>
-            <textarea id="log-comment" placeholder="Hur kändes passet? Ökade du i någon övning? (t.ex. Knäböj 10kg, kändes bra i knät)"></textarea>
-            <button id="save-log-btn" onclick="saveWorkoutLog()">💾 Spara i träningsdagboken</button>
+            <label style="font-size: 0.9rem; color: #ccc; display: block; margin-bottom: 5px;">Kommentar (känsla, reps, framsteg):</label>
+            <textarea id="log-comment" placeholder="Hur kändes kroppen idag?"></textarea>
+            <button id="save-log-btn" onclick="saveWorkoutLog()">💾 Spara pass & Gå till menyn</button>
         </div>
 
         <div>
@@ -197,8 +199,9 @@
         <button onclick="showMenu()" style="background-color: #2196f3; color: white;">↩ Tillbaka till menyn</button>
     </div>
 </div>
+
 <script>
-    // 1. HUVUDTRÄNINGSPASSET (Rehab Fas 2)
+    // 1. HUVUDTRÄNINGSPASSET
     const mainWorkoutProgram = [
         { name: "Den utrustning du behöver", duration: 15, desc: "Du behöver en ryggextensionmaskin, en trappa, en vägg, hantlar, gummiband och medicinboll" },
         { name: "Jägarvila (Kroppsvikt) (Set 1)", duration: 60, desc: "Glid ner mot väggen, ca 90 grader i knäna." },
@@ -275,7 +278,7 @@
         { name: "Stretch Framsida Lår (Vänster ben) (Kroppsvikt)", duration: 30, desc: "Stretcha vänster framsida lår." },
         { name: "Stretch Höftböjare (Höger ben) (Kroppsvikt)", duration: 30, desc: "Stretcha höger höftböjare." },
         { name: "Stretch Höftböjare (Vänster ben) (Kroppsvikt)", duration: 30, desc: "Stretcha vänster höftböjare." },
-        { name: "Passet är klart!", duration: 10, desc: "Otroligt bra jobbat. Dags för dusch!" }
+        { name: "Passet är klart!", duration: 1, desc: "Otroligt bra jobbat!" }
     ];
 
     // 2. KORT ÅTERHÄMTNINGSPASS
@@ -301,7 +304,7 @@
         { name: "Knästående Stretch Framsida Lår (Seisa-position)", duration: 60, desc: "Sitt på knä på smalbenen med fötterna bakåt. Luta överkroppen försiktigt bakåt tills det sträcker skönt i framsida lår." },
         { name: "Höftböjarstretch (Höger ben)", duration: 30, desc: "Gå upp i ett utfallsteg på knä. Skjut höften försiktigt framåt utan att svanka." },
         { name: "Höftböjarstretch (Vänster ben)", duration: 30, desc: "Skjut höften försiktigt framåt på vänster ben." },
-        { name: "Passet är klart!", duration: 10, desc: "Perfekt återhämtning och senvård genomförd!" }
+        { name: "Passet är klart!", duration: 1, desc: "Otroligt bra jobbat!" }
     ];
 
     // Globala variabler
@@ -311,6 +314,7 @@
     let timeLeft = 0;
     let timerInterval = null;
     let isRunning = false;
+    let isMuted = false;
     let completedDateTimeStr = "";
     let audioCtx = null;
 
@@ -325,12 +329,20 @@
     const timerEl = document.getElementById("timer");
     const nextEl = document.getElementById("up-next");
     const startBtn = document.getElementById("start-btn");
+    const muteBtn = document.getElementById("mute-btn");
     const progressBar = document.getElementById("progress-bar");
     const controlsGroup = document.getElementById("controls-group");
     const logSummary = document.getElementById("log-summary");
     const logDateEl = document.getElementById("log-date");
     const logCommentEl = document.getElementById("log-comment");
     const historyContainer = document.getElementById("history-container");
+
+    // Ladda rösterna direkt vid start i bakgrunden
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = function() {
+            window.speechSynthesis.getVoices();
+        };
+    }
 
     function initAudio() {
         try {
@@ -344,60 +356,69 @@
                 audioCtx.resume();
             }
         } catch (e) {
-            console.log("Audio exception:", e);
+            console.log("Ljud initieringsfel:", e);
         }
     }
 
-function speakExercise(text) {
-    if (isMuted) return;
-    
-    if ('speechSynthesis' in window) {
-        try {
-            window.speechSynthesis.cancel();
-            if (window.speechSynthesis.paused) {
-                window.speechSynthesis.resume();
+    function toggleMute() {
+        isMuted = !isMuted;
+        if (isMuted) {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+            muteBtn.textContent = "🔇 Röst Av";
+            muteBtn.style.backgroundColor = "#757575";
+        } else {
+            muteBtn.textContent = "🔊 Röst På";
+            muteBtn.style.backgroundColor = "#9c27b0";
+            if (activeWorkout && activeWorkout[currentStep]) {
+                speakExercise(activeWorkout[currentStep].name);
             }
-            
-            const cleanText = text.replace(/\(.*?\)/g, '').trim(); 
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            
-            utterance.lang = 'sv-SE';
-            utterance.rate = 0.95; // Drar ner hastigheten marginellt för att låta mer avslappnad och mänsklig
-            utterance.pitch = 1.0;
+        }
+    }
 
-            // Hämta alla tillgängliga röster på enheten
-            const voices = window.speechSynthesis.getVoices();
-            
-            // Leta efter svenska röster
-            const swedishVoices = voices.filter(v => v.lang === 'sv-SE' || v.lang === 'sv_SE');
-            
-            if (swedishVoices.length > 0) {
-                // Försök hitta premium- eller förbättrade röster (Låter ofta mer mänskliga)
-                const premiumVoice = swedishVoices.find(v => v.name.includes('Premium') || v.name.includes('Enhanced') || v.name.includes('Google'));
-                
-                if (premiumVoice) {
-                    utterance.voice = premiumVoice;
-                } else {
-                    utterance.voice = swedishVoices[0]; // Välj den första bästa svenska rösten
+    function speakExercise(text) {
+        if (isMuted) return;
+        
+        if ('speechSynthesis' in window) {
+            try {
+                window.speechSynthesis.cancel();
+                if (window.speechSynthesis.paused) {
+                    window.speechSynthesis.resume();
                 }
-            }
+                
+                const cleanText = text.replace(/\(.*?\)/g, '').trim(); 
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                
+                utterance.lang = 'sv-SE';
+                utterance.rate = 0.95; 
+                utterance.pitch = 1.0;
 
-            window.speechSynthesis.speak(utterance);
-        } catch (e) {
-            console.log("Speech synthesis error:", e);
+                const voices = window.speechSynthesis.getVoices();
+                const swedishVoices = voices.filter(v => v.lang === 'sv-SE' || v.lang === 'sv_SE');
+                
+                if (swedishVoices.length > 0) {
+                    const premiumVoice = swedishVoices.find(v => v.name.includes('Premium') || v.name.includes('Enhanced') || v.name.includes('Google'));
+                    if (premiumVoice) {
+                        utterance.voice = premiumVoice;
+                    } else {
+                        utterance.voice = swedishVoices[0];
+                    }
+                }
+                window.speechSynthesis.speak(utterance);
+            } catch (e) {
+                console.log("Talsyntesfel:", e);
+            }
         }
     }
-}
-
-// Ladda rösterna i bakgrunden direkt när appen startar (viktigt för att de ska finnas tillgängliga vid första klicket)
-if ('speechSynthesis' in window) {
-    window.speechSynthesis.onvoiceschanged = function() {
-        window.speechSynthesis.getVoices();
-    };
-}
 
     function selectWorkout(type) {
         initAudio();
+        
+        // "Lås upp" talsyntesen för iPhone/Android genom att läsa en osynlig text vid klicket
+        if (!isMuted && 'speechSynthesis' in window) {
+            let unlockUtterance = new SpeechSynthesisUtterance('');
+            window.speechSynthesis.speak(unlockUtterance);
+        }
+
         if (type === 'short') {
             activeWorkout = shortWorkoutProgram;
             activeWorkoutTitle = "Kort Återhämtningspass";
@@ -408,15 +429,16 @@ if ('speechSynthesis' in window) {
         currentStep = 0;
         isRunning = false;
         
-        if (logSummary) logSummary.style.display = "none";
-        if (controlsGroup) controlsGroup.style.display = "flex";
-        if (logCommentEl) logCommentEl.value = "";
+        logSummary.style.display = "none";
+        controlsGroup.style.display = "flex";
+        logCommentEl.value = "";
+        timerEl.style.display = "block";
         
-        if (menuScreen) menuScreen.style.display = "none";
-        if (historyScreen) historyScreen.style.display = "none";
-        if (workoutScreen) workoutScreen.style.display = "block";
+        menuScreen.style.display = "none";
+        historyScreen.style.display = "none";
+        workoutScreen.style.display = "block";
         
-        updateUI(true);
+        updateUI(true); // Läs upp första övningen
     }
 
     function showMenu() {
@@ -424,17 +446,15 @@ if ('speechSynthesis' in window) {
         isRunning = false;
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         
-        if (startBtn) {
-            startBtn.textContent = "Start";
-            startBtn.style.backgroundColor = "#4caf50";
-        }
+        startBtn.textContent = "Start";
+        startBtn.style.backgroundColor = "#4caf50";
 
-        // Återställ vyerna ordentligt
-        if (logSummary) logSummary.style.display = "none";
-        if (controlsGroup) controlsGroup.style.display = "flex";
-        if (workoutScreen) workoutScreen.style.display = "none";
-        if (historyScreen) historyScreen.style.display = "none";
-        if (menuScreen) menuScreen.style.display = "flex";
+        logSummary.style.display = "none";
+        controlsGroup.style.display = "flex";
+        timerEl.style.display = "block";
+        workoutScreen.style.display = "none";
+        historyScreen.style.display = "none";
+        menuScreen.style.display = "flex";
     }
 
     function playWarningPling() {
@@ -496,28 +516,30 @@ if ('speechSynthesis' in window) {
     function updateUI(shouldSpeak = false) {
         let progressPercent = ((currentStep) / activeWorkout.length) * 100;
         if (progressPercent > 100) progressPercent = 100;
-        if (progressBar) progressBar.style.width = progressPercent + "%";
+        progressBar.style.width = progressPercent + "%";
 
-        if (currentStep >= activeWorkout.length) {
-            if (nameEl) nameEl.textContent = "Passet är klart! 🎉";
-            if (descEl) descEl.textContent = "Otroligt bra jobbat!";
-            if (timerEl) timerEl.textContent = "00:00";
-            if (nextEl) nextEl.textContent = "";
-            speakExercise("Passet är klart, otroligt bra jobbat!");
+        // Om vi har nått den absolut sista händelsen ("Passet är klart")
+        if (currentStep >= activeWorkout.length - 1) {
+            nameEl.textContent = "Passet är klart! 🎉";
+            descEl.textContent = "Otroligt bra jobbat! Nu kan du spara passet.";
+            timerEl.style.display = "none";
+            nextEl.textContent = "";
+            
+            if (shouldSpeak) speakExercise("Passet är klart, otroligt bra jobbat!");
+            
+            fireConfetti(true);
             showLogForm();
             return;
         }
 
         const step = activeWorkout[currentStep];
-        if (nameEl) nameEl.textContent = step.name;
-        if (descEl) descEl.textContent = step.desc;
+        nameEl.textContent = step.name;
+        descEl.textContent = step.desc;
         
-        if (nextEl) {
-            if (currentStep + 1 < activeWorkout.length) {
-                nextEl.textContent = "Nästa: " + activeWorkout[currentStep + 1].name;
-            } else {
-                nextEl.textContent = "Nästa: Passet är slut!";
-            }
+        if (currentStep + 1 < activeWorkout.length - 1) {
+            nextEl.textContent = "Nästa: " + activeWorkout[currentStep + 1].name;
+        } else {
+            nextEl.textContent = "Nästa: Passet är slut!";
         }
 
         if (!isRunning) {
@@ -533,20 +555,18 @@ if ('speechSynthesis' in window) {
     function formatTime(seconds) {
         const m = Math.floor(seconds / 60).toString().padStart(2, '0');
         const s = (seconds % 60).toString().padStart(2, '0');
-        if (timerEl) timerEl.textContent = `${m}:${s}`;
+        timerEl.textContent = `${m}:${s}`;
     }
 
     function toggleTimer() {
-        if (currentStep >= activeWorkout.length) return;
+        if (currentStep >= activeWorkout.length - 1) return;
         initAudio();
 
         if (isRunning) {
-            if (timerInterval) clearInterval(timerInterval);
+            clearInterval(timerInterval);
             if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-            if (startBtn) {
-                startBtn.textContent = "Start";
-                startBtn.style.backgroundColor = "#4caf50";
-            }
+            startBtn.textContent = "Start";
+            startBtn.style.backgroundColor = "#4caf50";
         } else {
             if (timeLeft <= 0) timeLeft = activeWorkout[currentStep].duration;
             timerInterval = setInterval(() => {
@@ -560,12 +580,11 @@ if ('speechSynthesis' in window) {
                     playSuccessSound();
                     updateBackground();
                     
-                    if (currentStep >= activeWorkout.length) {
+                    if (currentStep >= activeWorkout.length - 1) {
                         clearInterval(timerInterval);
                         isRunning = false;
-                        if (startBtn) startBtn.textContent = "Start";
+                        startBtn.textContent = "Start";
                         updateUI(true);
-                        fireConfetti(true);
                     } else {
                         timeLeft = activeWorkout[currentStep].duration;
                         updateUI(true);
@@ -573,22 +592,18 @@ if ('speechSynthesis' in window) {
                     }
                 }
             }, 1000);
-            if (startBtn) {
-                startBtn.textContent = "Paus";
-                startBtn.style.backgroundColor = "#f44336";
-            }
+            startBtn.textContent = "Paus";
+            startBtn.style.backgroundColor = "#f44336";
         }
         isRunning = !isRunning;
     }
 
     function nextStep() {
-        if (currentStep >= activeWorkout.length) return;
-        if (timerInterval) clearInterval(timerInterval);
+        if (currentStep >= activeWorkout.length - 1) return;
+        clearInterval(timerInterval);
         isRunning = false;
-        if (startBtn) {
-            startBtn.textContent = "Start";
-            startBtn.style.backgroundColor = "#4caf50";
-        }
+        startBtn.textContent = "Start";
+        startBtn.style.backgroundColor = "#4caf50";
         
         playSuccessSound();
         fireConfetti(false);
@@ -596,25 +611,21 @@ if ('speechSynthesis' in window) {
         currentStep++;
         updateBackground();
         updateUI(true);
-        
-        if (currentStep >= activeWorkout.length) {
-            fireConfetti(true);
-        }
     }
 
     function showLogForm() {
-        if (controlsGroup) controlsGroup.style.display = "none";
-        if (logSummary) logSummary.style.display = "block";
+        controlsGroup.style.display = "none";
+        logSummary.style.display = "block";
         
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         completedDateTimeStr = now.toLocaleDateString('sv-SE', options);
         
-        if (logDateEl) logDateEl.textContent = "📅 Datum & Tid: " + completedDateTimeStr;
+        logDateEl.textContent = "📅 Datum & Tid: " + completedDateTimeStr;
     }
 
     function saveWorkoutLog() {
-        const commentText = (logCommentEl ? logCommentEl.value.trim() : "") || "Passet genomfört utan kommentarer.";
+        const commentText = logCommentEl.value.trim() || "Passet genomfört utan kommentarer.";
         
         const logEntry = {
             id: Date.now(),
@@ -629,7 +640,9 @@ if ('speechSynthesis' in window) {
         localStorage.setItem("workout_logs", JSON.stringify(logs));
 
         alert("Ditt träningspass har sparats i dagboken! 💪");
-        showHistory();
+        
+        // BUGGFIX 3: Gå direkt till huvudmenyn istället för historik
+        showMenu();
     }
 
     function showHistory() {
@@ -637,32 +650,30 @@ if ('speechSynthesis' in window) {
         isRunning = false;
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         
-        if (menuScreen) menuScreen.style.display = "none";
-        if (workoutScreen) workoutScreen.style.display = "none";
-        if (historyScreen) historyScreen.style.display = "block";
+        menuScreen.style.display = "none";
+        workoutScreen.style.display = "none";
+        historyScreen.style.display = "block";
 
         let logs = JSON.parse(localStorage.getItem("workout_logs") || "[]");
         logs.sort((a, b) => b.timestamp - a.timestamp);
 
-        if (historyContainer) {
-            historyContainer.innerHTML = "";
+        historyContainer.innerHTML = "";
 
-            if (logs.length === 0) {
-                historyContainer.innerHTML = "<p style='color: #aaa; text-align: center;'>Inga sparade pass ännu. Kör ett pass och spara det så syns det här!</p>";
-                return;
-            }
-
-            logs.forEach(log => {
-                const item = document.createElement("div");
-                item.className = "history-item";
-                item.innerHTML = `
-                    <div class="history-date">📅 ${log.dateStr}</div>
-                    <div class="history-title">🏋️‍♀️ ${log.title}</div>
-                    <div class="history-comment">${escapeHtml(log.comment)}</div>
-                `;
-                historyContainer.appendChild(item);
-            });
+        if (logs.length === 0) {
+            historyContainer.innerHTML = "<p style='color: #aaa; text-align: center;'>Inga sparade pass ännu. Kör ett pass och spara det så syns det här!</p>";
+            return;
         }
+
+        logs.forEach(log => {
+            const item = document.createElement("div");
+            item.className = "history-item";
+            item.innerHTML = `
+                <div class="history-date">📅 ${log.dateStr}</div>
+                <div class="history-title">🏋️‍♀️ ${log.title}</div>
+                <div class="history-comment">${escapeHtml(log.comment)}</div>
+            `;
+            historyContainer.appendChild(item);
+        });
     }
 
     function escapeHtml(text) {
@@ -677,6 +688,5 @@ if ('speechSynthesis' in window) {
     // Initiera appen korrekt vid laddning
     showMenu();
 </script>
-
 </body>
 </html>
