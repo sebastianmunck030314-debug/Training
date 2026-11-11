@@ -197,10 +197,9 @@
         <button onclick="showMenu()" style="background-color: #2196f3; color: white;">↩ Tillbaka till menyn</button>
     </div>
 </div>
-
 <script>
-    // 1. HUVUDTRÄNINGSPASSET
-    const mainWorkoutProgram47min = [
+    // 1. HUVUDTRÄNINGSPASSET (Rehab Fas 2)
+    const mainWorkoutProgram = [
         { name: "Den utrustning du behöver", duration: 15, desc: "Du behöver en ryggextensionmaskin, en trappa, en vägg, hantlar, gummiband och medicinboll" },
         { name: "Jägarvila (Kroppsvikt) (Set 1)", duration: 60, desc: "Glid ner mot väggen, ca 90 grader i knäna." },
         { name: "Vila (Mellan övningar)", duration: 10, desc: "Kort vila innan planka." },
@@ -279,57 +278,45 @@
         { name: "Passet är klart!", duration: 10, desc: "Otroligt bra jobbat. Dags för dusch!" }
     ];
 
-    // 2. KORT TRÄNINGSPASS
-    const shortWorkoutProgram12min = [
-        // 2. KORT ÅTERHÄMTNINGSPASS (Fot, Soleus, Isometri & Stretch - Ca 12 min)
-const shortWorkoutProgram = [
-    // SET 1: KORTFOT & TÅHÄVNINGAR
-    { name: "Kortfot / Fotvalvsaktivering (Båda fötter - Set 1)", duration: 45, desc: "Stå eller sitt barfota. Dra ihop båda fötterna samtidigt genom att dra trampdynorna mot hälarna utan att böja tårna. Håll anspänningen." },
-    { name: "Vila", duration: 15, desc: "Sätt dig tillrätta på en stol." },
-    { name: "Sittande Tåhävningar (Soleus - Set 1)", duration: 60, desc: "Sitt på en stol med böjda knän (90 grader). Placera eventuellt en lätt vikt/bok på knäna och lyft hälarna lugnt och kontrollerat." },
-    { name: "Vila", duration: 15, desc: "Andas lugnt." },
-    
-    // SET 2: TÅHÄVNINGAR & KORTFOT
-    { name: "Sittande Tåhävningar (Soleus - Set 2)", duration: 60, desc: "Tryck upp på tå, stanna 1-2 sekunder i toppläget och sänk långsamt." },
-    { name: "Vila", duration: 15, desc: "Andas lugnt." },
-    { name: "Kortfot / Fotvalvsaktivering (Båda fötter - Set 2)", duration: 45, desc: "Repetera fotvalvsaktiveringen på båda fötterna samtidigt med stark kontakt under stortårnas bas." },
-    { name: "Vila", duration: 15, desc: "Gör dig redo för balans." },
-
-    // BALANS
-    { name: "Enbensbalans med fotfokus (Höger ben)", duration: 45, desc: "Stå barfota på höger ben. Håll ett mjukt och stabilt knä. Håll balansen lugnt." },
-    { name: "Enbensbalans med fotfokus (Vänster ben)", duration: 45, desc: "Stå barfota på vänster ben. Känn hur fotleden och fotvalvet arbetar för att hålla balansen." },
-    { name: "Vila", duration: 15, desc: "Gå intill en vägg för superset." },
-    
-    // SUPERSET: JÄGARVILA & VADSTRETCH
-    { name: "Isometrisk Jägarvila (Patellasena - Set 1)", duration: 45, desc: "Stanna i cirka 60-70 graders knävinkel mot väggen. Håll helt stilla för att stärka senan." },
-    { name: "Stående Djup Vadstretch / Soleus (Höger ben)", duration: 30, desc: "Böj på bakre knät med hälen kvar i golvet så att sträcket känns längre ner mot akillessenen." },
-    { name: "Stående Djup Vadstretch / Soleus (Vänster ben)", duration: 30, desc: "Böj på bakre knät och håll hälen i golvet." },
-    { name: "Isometrisk Jägarvila (Patellasena - Set 2)", duration: 45, desc: "Pressa fötterna mot golvet och håll stilla i positionen." },
-    { name: "Stående Djup Vadstretch / Soleus (Höger ben)", duration: 30, desc: "Repetera djup vadstretch på höger ben." },
-    { name: "Stående Djup Vadstretch / Soleus (Vänster ben)", duration: 30, desc: "Repetera djup vadstretch på vänster ben." },
-    
-    { name: "Vila & Gå ner på golvet", duration: 20, desc: "Sätt dig på knä på en matta eller mjukt underlag." },
-    
-    // KNÄSTÅENDE STRETCH & HÖFTBÖJARE
-    { name: "Knästående Stretch Framsida Lår (Seisa-position)", duration: 60, desc: "Sitt på knä på smalbenen med fötterna bakåt. Luta överkroppen försiktigt bakåt tills det sträcker skönt i framsida lår." },
-    { name: "Höftböjarstretch (Höger ben)", duration: 30, desc: "Gå upp i ett utfallsteg på knä. Skjut höften försiktigt framåt utan att svanka." },
-    { name: "Höftböjarstretch (Vänster ben)", duration: 30, desc: "Skjut höften försiktigt framåt på vänster ben." },
-    { name: "Passet är klart!", duration: 10, desc: "Perfekt återhämtning och senvård genomförd!" }
-]; }
+    // 2. KORT ÅTERHÄMTNINGSPASS
+    const shortWorkoutProgram = [
+        { name: "Kortfot / Fotvalvsaktivering (Båda fötter - Set 1)", duration: 45, desc: "Stå eller sitt barfota. Dra ihop båda fötterna samtidigt genom att dra trampdynorna mot hälarna utan att böja tårna. Håll anspänningen." },
+        { name: "Vila", duration: 15, desc: "Sätt dig tillrätta på en stol." },
+        { name: "Sittande Tåhävningar (Soleus - Set 1)", duration: 60, desc: "Sitt på en stol med böjda knän (90 grader). Placera eventuellt en lätt vikt/bok på knäna och lyft hälarna lugnt och kontrollerat." },
+        { name: "Vila", duration: 15, desc: "Andas lugnt." },
+        { name: "Sittande Tåhävningar (Soleus - Set 2)", duration: 60, desc: "Tryck upp på tå, stanna 1-2 sekunder i toppläget och sänk långsamt." },
+        { name: "Vila", duration: 15, desc: "Andas lugnt." },
+        { name: "Kortfot / Fotvalvsaktivering (Båda fötter - Set 2)", duration: 45, desc: "Repetera fotvalvsaktiveringen på båda fötterna samtidigt med stark kontakt under stortårnas bas." },
+        { name: "Vila", duration: 15, desc: "Gör dig redo för balans." },
+        { name: "Enbensbalans med fotfokus (Höger ben)", duration: 45, desc: "Stå barfota på höger ben. Håll ett mjukt och stabilt knä. Håll balansen lugnt." },
+        { name: "Enbensbalans med fotfokus (Vänster ben)", duration: 45, desc: "Stå barfota på vänster ben. Känn hur fotleden och fotvalvet arbetar för att hålla balansen." },
+        { name: "Vila", duration: 15, desc: "Gå intill en vägg för superset." },
+        { name: "Isometrisk Jägarvila (Patellasena - Set 1)", duration: 45, desc: "Stanna i cirka 60-70 graders knävinkel mot väggen. Håll helt stilla för att stärka senan." },
+        { name: "Stående Djup Vadstretch / Soleus (Höger ben)", duration: 30, desc: "Böj på bakre knät med hälen kvar i golvet så att sträcket känns längre ner mot akillessenen." },
+        { name: "Stående Djup Vadstretch / Soleus (Vänster ben)", duration: 30, desc: "Böj på bakre knät och håll hälen i golvet." },
+        { name: "Isometrisk Jägarvila (Patellasena - Set 2)", duration: 45, desc: "Pressa fötterna mot golvet och håll stilla i positionen." },
+        { name: "Stående Djup Vadstretch / Soleus (Höger ben)", duration: 30, desc: "Repetera djup vadstretch på höger ben." },
+        { name: "Stående Djup Vadstretch / Soleus (Vänster ben)", duration: 30, desc: "Repetera djup vadstretch på vänster ben." },
+        { name: "Vila & Gå ner på golvet", duration: 20, desc: "Sätt dig på knä på en matta eller mjukt underlag." },
+        { name: "Knästående Stretch Framsida Lår (Seisa-position)", duration: 60, desc: "Sitt på knä på smalbenen med fötterna bakåt. Luta överkroppen försiktigt bakåt tills det sträcker skönt i framsida lår." },
+        { name: "Höftböjarstretch (Höger ben)", duration: 30, desc: "Gå upp i ett utfallsteg på knä. Skjut höften försiktigt framåt utan att svanka." },
+        { name: "Höftböjarstretch (Vänster ben)", duration: 30, desc: "Skjut höften försiktigt framåt på vänster ben." },
+        { name: "Passet är klart!", duration: 10, desc: "Perfekt återhämtning och senvård genomförd!" }
     ];
 
+    // Globala variabler
     let activeWorkout = mainWorkoutProgram;
-    let activeWorkoutTitle = "Huvudpass (Rehab & Styrka)";
+    let activeWorkoutTitle = "Huvudpass (Rehab Fas 2)";
     let currentStep = 0;
     let timeLeft = 0;
     let timerInterval = null;
     let isRunning = false;
     let completedDateTimeStr = "";
+    let audioCtx = null;
 
     const backgroundColors = ["#121212", "#1a2a3a", "#2c1c38", "#1c3829", "#38231c", "#1e1e1e"];
 
-    let audioCtx = null;
-    
+    // DOM-element
     const menuScreen = document.getElementById("menu-screen");
     const workoutScreen = document.getElementById("workout-screen");
     const historyScreen = document.getElementById("history-screen");
@@ -345,15 +332,38 @@ const shortWorkoutProgram = [
     const logCommentEl = document.getElementById("log-comment");
     const historyContainer = document.getElementById("history-container");
 
+    function initAudio() {
+        try {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) {
+                    audioCtx = new AudioContextClass();
+                }
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        } catch (e) {
+            console.log("Audio exception:", e);
+        }
+    }
+
     function speakExercise(text) {
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const cleanText = text.replace(/\(.*?\)/g, '').trim(); 
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.lang = 'sv-SE';
-            utterance.rate = 1.0;
-            utterance.pitch = 1.0;
-            window.speechSynthesis.speak(utterance);
+            try {
+                window.speechSynthesis.cancel();
+                if (window.speechSynthesis.paused) {
+                    window.speechSynthesis.resume();
+                }
+                const cleanText = text.replace(/\(.*?\)/g, '').trim(); 
+                const utterance = new SpeechSynthesisUtterance(cleanText);
+                utterance.lang = 'sv-SE';
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+                window.speechSynthesis.speak(utterance);
+            } catch (e) {
+                console.log("Speech synthesis error:", e);
+            }
         }
     }
 
@@ -361,93 +371,91 @@ const shortWorkoutProgram = [
         initAudio();
         if (type === 'short') {
             activeWorkout = shortWorkoutProgram;
-            activeWorkoutTitle = "Kort träningspass";
+            activeWorkoutTitle = "Kort Återhämtningspass";
         } else {
             activeWorkout = mainWorkoutProgram;
             activeWorkoutTitle = "Huvudpass (Rehab Fas 2)";
         }
         currentStep = 0;
         isRunning = false;
-        logSummary.style.display = "none";
-        controlsGroup.style.display = "flex";
-        logCommentEl.value = "";
         
-        menuScreen.style.display = "none";
-        historyScreen.style.display = "none";
-        workoutScreen.style.display = "block";
-        updateUI();
+        if (logSummary) logSummary.style.display = "none";
+        if (controlsGroup) controlsGroup.style.display = "flex";
+        if (logCommentEl) logCommentEl.value = "";
+        
+        if (menuScreen) menuScreen.style.display = "none";
+        if (historyScreen) historyScreen.style.display = "none";
+        if (workoutScreen) workoutScreen.style.display = "block";
+        
+        updateUI(true);
     }
 
     function showMenu() {
-        clearInterval(timerInterval);
+        if (timerInterval) clearInterval(timerInterval);
         isRunning = false;
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-        startBtn.textContent = "Start";
-        startBtn.style.backgroundColor = "#4caf50";
-        workoutScreen.style.display = "none";
-        historyScreen.style.display = "none";
-        menuScreen.style.display = "flex";
-    }
+        
+        if (startBtn) {
+            startBtn.textContent = "Start";
+            startBtn.style.backgroundColor = "#4caf50";
+        }
 
-    function initAudio() {
-        if (!audioCtx) {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            audioCtx = new AudioContext();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            gain.gain.value = 0;
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(0);
-            osc.stop(0.1);
-        }
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-        }
+        // Återställ vyerna ordentligt
+        if (logSummary) logSummary.style.display = "none";
+        if (controlsGroup) controlsGroup.style.display = "flex";
+        if (workoutScreen) workoutScreen.style.display = "none";
+        if (historyScreen) historyScreen.style.display = "none";
+        if (menuScreen) menuScreen.style.display = "flex";
     }
 
     function playWarningPling() {
         if (!audioCtx) return;
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'sine'; 
-        osc.frequency.setValueAtTime(700, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-        osc.connect(gain); gain.connect(audioCtx.destination);
-        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        try {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine'; 
+            osc.frequency.setValueAtTime(700, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+        } catch (e) {}
     }
 
     function playSuccessSound() {
         if (!audioCtx) return;
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const now = audioCtx.currentTime;
-        [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = freq;
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start(now + i * 0.1);
-            gain.gain.setValueAtTime(0.3, now + i * 0.1);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
-            osc.stop(now + i * 0.1 + 0.4);
-        });
+        try {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const now = audioCtx.currentTime;
+            [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now + i * 0.1);
+                gain.gain.setValueAtTime(0.3, now + i * 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.1 + 0.4);
+                osc.stop(now + i * 0.1 + 0.4);
+            });
+        } catch (e) {}
     }
 
     function fireConfetti(isEnd = false) {
-        if (isEnd) {
-            let duration = 5 * 1000;
-            let end = Date.now() + duration;
-            (function frame() {
-                confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
-                confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
-                if (Date.now() < end) requestAnimationFrame(frame);
-            }());
-        } else {
-            confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+        if (typeof confetti === 'function') {
+            if (isEnd) {
+                let duration = 5 * 1000;
+                let end = Date.now() + duration;
+                (function frame() {
+                    confetti({ particleCount: 7, angle: 60, spread: 55, origin: { x: 0 } });
+                    confetti({ particleCount: 7, angle: 120, spread: 55, origin: { x: 1 } });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                }());
+            } else {
+                confetti({ particleCount: 50, spread: 70, origin: { y: 0.6 } });
+            }
         }
     }
 
@@ -459,28 +467,28 @@ const shortWorkoutProgram = [
     function updateUI(shouldSpeak = false) {
         let progressPercent = ((currentStep) / activeWorkout.length) * 100;
         if (progressPercent > 100) progressPercent = 100;
-        progressBar.style.width = progressPercent + "%";
+        if (progressBar) progressBar.style.width = progressPercent + "%";
 
         if (currentStep >= activeWorkout.length) {
-            nameEl.textContent = "Passet är klart! 🎉";
-            descEl.textContent = "Otroligt bra jobbat!";
-            timerEl.textContent = "00:00";
-            nextEl.textContent = "";
+            if (nameEl) nameEl.textContent = "Passet är klart! 🎉";
+            if (descEl) descEl.textContent = "Otroligt bra jobbat!";
+            if (timerEl) timerEl.textContent = "00:00";
+            if (nextEl) nextEl.textContent = "";
             speakExercise("Passet är klart, otroligt bra jobbat!");
-            
-            // Visa loggningsrutan när passet avslutas
             showLogForm();
             return;
         }
 
         const step = activeWorkout[currentStep];
-        nameEl.textContent = step.name;
-        descEl.textContent = step.desc;
+        if (nameEl) nameEl.textContent = step.name;
+        if (descEl) descEl.textContent = step.desc;
         
-        if (currentStep + 1 < activeWorkout.length) {
-            nextEl.textContent = "Nästa: " + activeWorkout[currentStep + 1].name;
-        } else {
-            nextEl.textContent = "Nästa: Passet är slut!";
+        if (nextEl) {
+            if (currentStep + 1 < activeWorkout.length) {
+                nextEl.textContent = "Nästa: " + activeWorkout[currentStep + 1].name;
+            } else {
+                nextEl.textContent = "Nästa: Passet är slut!";
+            }
         }
 
         if (!isRunning) {
@@ -496,7 +504,7 @@ const shortWorkoutProgram = [
     function formatTime(seconds) {
         const m = Math.floor(seconds / 60).toString().padStart(2, '0');
         const s = (seconds % 60).toString().padStart(2, '0');
-        timerEl.textContent = `${m}:${s}`;
+        if (timerEl) timerEl.textContent = `${m}:${s}`;
     }
 
     function toggleTimer() {
@@ -504,13 +512,13 @@ const shortWorkoutProgram = [
         initAudio();
 
         if (isRunning) {
-            clearInterval(timerInterval);
+            if (timerInterval) clearInterval(timerInterval);
             if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-            startBtn.textContent = "Start";
-            startBtn.style.backgroundColor = "#4caf50";
+            if (startBtn) {
+                startBtn.textContent = "Start";
+                startBtn.style.backgroundColor = "#4caf50";
+            }
         } else {
-            speakExercise(activeWorkout[currentStep].name);
-
             if (timeLeft <= 0) timeLeft = activeWorkout[currentStep].duration;
             timerInterval = setInterval(() => {
                 timeLeft--;
@@ -526,7 +534,7 @@ const shortWorkoutProgram = [
                     if (currentStep >= activeWorkout.length) {
                         clearInterval(timerInterval);
                         isRunning = false;
-                        startBtn.textContent = "Start";
+                        if (startBtn) startBtn.textContent = "Start";
                         updateUI(true);
                         fireConfetti(true);
                     } else {
@@ -536,18 +544,22 @@ const shortWorkoutProgram = [
                     }
                 }
             }, 1000);
-            startBtn.textContent = "Paus";
-            startBtn.style.backgroundColor = "#f44336";
+            if (startBtn) {
+                startBtn.textContent = "Paus";
+                startBtn.style.backgroundColor = "#f44336";
+            }
         }
         isRunning = !isRunning;
     }
 
     function nextStep() {
         if (currentStep >= activeWorkout.length) return;
-        clearInterval(timerInterval);
+        if (timerInterval) clearInterval(timerInterval);
         isRunning = false;
-        startBtn.textContent = "Start";
-        startBtn.style.backgroundColor = "#4caf50";
+        if (startBtn) {
+            startBtn.textContent = "Start";
+            startBtn.style.backgroundColor = "#4caf50";
+        }
         
         playSuccessSound();
         fireConfetti(false);
@@ -561,22 +573,19 @@ const shortWorkoutProgram = [
         }
     }
 
-    // -------------------------------------------------------------
-    // LOGGNING OCH HISTORIK-FUNKTIONER
-    // -------------------------------------------------------------
     function showLogForm() {
-        controlsGroup.style.display = "none";
-        logSummary.style.display = "block";
+        if (controlsGroup) controlsGroup.style.display = "none";
+        if (logSummary) logSummary.style.display = "block";
         
         const now = new Date();
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         completedDateTimeStr = now.toLocaleDateString('sv-SE', options);
         
-        logDateEl.textContent = "📅 Datum & Tid: " + completedDateTimeStr;
+        if (logDateEl) logDateEl.textContent = "📅 Datum & Tid: " + completedDateTimeStr;
     }
 
     function saveWorkoutLog() {
-        const commentText = logCommentEl.value.trim() || "Passet genomfört utan kommentarer.";
+        const commentText = (logCommentEl ? logCommentEl.value.trim() : "") || "Passet genomfört utan kommentarer.";
         
         const logEntry = {
             id: Date.now(),
@@ -595,36 +604,36 @@ const shortWorkoutProgram = [
     }
 
     function showHistory() {
-        clearInterval(timerInterval);
+        if (timerInterval) clearInterval(timerInterval);
         isRunning = false;
         if ('speechSynthesis' in window) window.speechSynthesis.cancel();
         
-        menuScreen.style.display = "none";
-        workoutScreen.style.display = "none";
-        historyScreen.style.display = "block";
+        if (menuScreen) menuScreen.style.display = "none";
+        if (workoutScreen) workoutScreen.style.display = "none";
+        if (historyScreen) historyScreen.style.display = "block";
 
         let logs = JSON.parse(localStorage.getItem("workout_logs") || "[]");
-        
-        // Sortera med nyaste passet först
         logs.sort((a, b) => b.timestamp - a.timestamp);
 
-        historyContainer.innerHTML = "";
+        if (historyContainer) {
+            historyContainer.innerHTML = "";
 
-        if (logs.length === 0) {
-            historyContainer.innerHTML = "<p style='color: #aaa; text-align: center;'>Inga sparade pass ännu. Kör ett pass och spara det så syns det här!</p>";
-            return;
+            if (logs.length === 0) {
+                historyContainer.innerHTML = "<p style='color: #aaa; text-align: center;'>Inga sparade pass ännu. Kör ett pass och spara det så syns det här!</p>";
+                return;
+            }
+
+            logs.forEach(log => {
+                const item = document.createElement("div");
+                item.className = "history-item";
+                item.innerHTML = `
+                    <div class="history-date">📅 ${log.dateStr}</div>
+                    <div class="history-title">🏋️‍♀️ ${log.title}</div>
+                    <div class="history-comment">${escapeHtml(log.comment)}</div>
+                `;
+                historyContainer.appendChild(item);
+            });
         }
-
-        logs.forEach(log => {
-            const item = document.createElement("div");
-            item.className = "history-item";
-            item.innerHTML = `
-                <div class="history-date">📅 ${log.dateStr}</div>
-                <div class="history-title">🏋️‍♀️ ${log.title}</div>
-                <div class="history-comment">${escapeHtml(log.comment)}</div>
-            `;
-            historyContainer.appendChild(item);
-        });
     }
 
     function escapeHtml(text) {
@@ -635,6 +644,10 @@ const shortWorkoutProgram = [
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
+
+    // Initiera appen korrekt vid laddning
+    showMenu();
 </script>
+
 </body>
 </html>
